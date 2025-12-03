@@ -3,10 +3,10 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { platform } = require("os");
 
 module.exports = {
-  entry: "./index.js",
+  entry: "./bootstrap.js",
   output: {
     path: path.resolve(__dirname, "public"),
-    filename: "index.js",
+    filename: "bootstrap.js",
   },
   mode: "development",
   plugins: [
