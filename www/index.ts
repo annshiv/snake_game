@@ -1,8 +1,11 @@
 import init, { World } from "snake_game";
 
 init().then((_) => {
-  const world = World.new();
-  const canvas = document.getElementById("snake-canvas");
+  const WORLD_WIDTH = 8;
+  const snakeIndex = Date.now() % (WORLD_WIDTH * WORLD_WIDTH);
+
+  const world = World.new(WORLD_WIDTH, snakeIndex);
+  const canvas = <HTMLCanvasElement>document.getElementById("snake-canvas");
   const ctx = canvas.getContext("2d");
 
   const worldSize = world.width();
@@ -27,11 +30,11 @@ init().then((_) => {
     ctx.stroke();
   };
 
-  const snakeIdx = world.snake_index_head();
-  const col = snakeIdx % worldSize;
-  const row = Math.floor(snakeIdx / worldSize);
-
   const drawSnake = () => {
+    const snakeIdx = world.snake_index_head();
+    const col = snakeIdx % worldSize;
+    const row = Math.floor(snakeIdx / worldSize);
+
     ctx.beginPath();
 
     ctx.fillRect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -39,6 +42,21 @@ init().then((_) => {
     ctx.stroke();
   };
 
-  drawWorld();
-  drawSnake();
+  const paint = () => {
+    drawWorld();
+    drawSnake();
+  };
+
+  const update = () => {
+    const fps = 5;
+    setTimeout(() => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      world.update();
+      paint();
+      requestAnimationFrame(update);
+    }, 1000 / 5);
+  };
+
+  paint();
+  update();
 });
